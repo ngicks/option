@@ -1,14 +1,13 @@
 package opt
 
-import (
-	"errors"
-	"fmt"
-	"slices"
-
-)
-
+import "slices"
 
 type Options[T any] []Option[T]
+
+func (o Options[T]) Iter() iter.Seq[Option[T]] {
+	return slices.Values(o)
+}
+
 
 // EqualFunc tests equality of l and r using an equality function cmp.
 //
@@ -59,4 +58,3 @@ func CloneOptions[T comparable, Opts ~[]Option[T]](o Opts) Opts {
 	copy(opts, o)
 	return Opts(opts)
 }
-
