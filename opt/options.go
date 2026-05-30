@@ -1,13 +1,15 @@
 package opt
 
-import "slices"
+import (
+	"iter"
+	"slices"
+)
 
 type Options[T any] []Option[T]
 
 func (o Options[T]) Iter() iter.Seq[Option[T]] {
 	return slices.Values(o)
 }
-
 
 // EqualFunc tests equality of l and r using an equality function cmp.
 //

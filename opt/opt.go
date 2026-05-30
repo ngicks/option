@@ -40,6 +40,23 @@ func WrapPointer[T any](t *T) Option[*T] {
 	return None[*T]()
 }
 
+func FromSqlNull[T any](v sql.Null[T]) Option[T] {
+	if !v.Valid {
+		return None[T]()
+	}
+	return Some(v.V)
+}
+
+func (o Option[T]) SqlNull() sql.Null[T] {
+	if o.IsNone() {
+		return sql.Null[T]{}
+	}
+	return sql.Null[T]{
+		Valid: true,
+		V:     o.Value(),
+	}
+}
+
 func (o Option[T]) IsZero() bool {
 	return o.IsNone()
 }
@@ -50,18 +67,14 @@ func (o Option[T]) Value() T {
 	return o.v
 }
 
-func (o Option[T]) Get() (T, bool) {
-	return o.Value(), o.IsSome()
-}
-
 // Pointer transforms o to *T, the plain conventional Go representation of an optional value.
-// The value is copied by assignment before returned from Pointer.
-func (o Option[T]) Pointer() *T {
+// The pointer is reference to internal value.
+// Use lock mechanism if multiple goroutines need to acccess it.
+func (o *Option[T]) Pointer() *T {
 	if o.IsNone() {
 		return nil
 	}
-	t := o.v
-	return &t
+	return &o.v
 }
 
 // CloneFunc clones o using the cloneT function.
@@ -84,5 +97,3 @@ func (o Option[T]) EqualFunc(other Option[T], cmp func(i, j T) bool) bool {
 
 	return cmp(o.v, other.v)
 }
-
-

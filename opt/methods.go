@@ -1,5 +1,6 @@
 package opt
 
+import "iter"
 
 // And returns u if o is some, otherwise None[T].
 func (o Option[T]) And[U any](u Option[U]) Option[U] {
@@ -19,7 +20,14 @@ func (o Option[T]) AndThen[U any](f func(t T) Option[U]) Option[U] {
 	}
 }
 
-func (o Option[T]) Expect -> T ... implement
+// Expect returns o's value if o is some.
+// Otherwise it panics with msg.
+func (o Option[T]) Expect(msg string) T {
+	if o.IsNone() {
+		panic(msg)
+	}
+	return o.v
+}
 
 // Filter returns o if o is some and calling pred against o's value returns true.
 // Otherwise it returns None[T].
@@ -30,45 +38,74 @@ func (o Option[T]) Filter(pred func(t T) bool) Option[T] {
 	return None[T]()
 }
 
-
+// GetOrInsert inserts t into o if o is none, then returns a pointer to o's value.
+// If o is already some, the existing value is kept and t is discarded.
+//
+// o must be addressable; the returned pointer aliases o's internal value.
 func (o *Option[T]) GetOrInsert(t T) *T {
-	if o.IsNone() {	
+	if o.IsNone() {
+		o.some = true
+		o.v = t
+	}
+	return &o.v
+}
+
+// GetOrInsertDefault inserts the zero value of T into o if o is none,
+// then returns a pointer to o's value.
+// If o is already some, the existing value is kept.
+//
+// o must be addressable; the returned pointer aliases o's internal value.
+func (o *Option[T]) GetOrInsertDefault() *T {
+	if o.IsNone() {
+		o.some = true
+		var zero T
+		o.v = zero
+	}
+	return &o.v
+}
+
+// GetOrInsertFunc inserts the result of fn into o if o is none,
+// then returns a pointer to o's value.
+// If o is already some, the existing value is kept and fn is not called.
+//
+// o must be addressable; the returned pointer aliases o's internal value.
+func (o *Option[T]) GetOrInsertFunc(fn func() T) *T {
+	if o.IsNone() {
+		o.some = true
+		o.v = fn()
+	}
+	return &o.v
+}
+
+// Insert sets o's value to t, overwriting any existing value, and returns a pointer to it.
+//
+// See [Option.GetOrInsert] which only inserts when o is none.
+//
+// o must be addressable; the returned pointer aliases o's internal value.
+func (o *Option[T]) Insert(t T) *T {
 	o.some = true
 	o.v = t
-	}
-
 	return &o.v
 }
 
-func (o *Option[T]) GetOrInsertDefault() Option[T] {
-		if o.IsNone() {	
-	o.some = true
-	o.v = *new(T)
+// Inspect calls fn with o's value if o is some, then returns o unchanged.
+func (o Option[T]) Inspect(fn func(t T)) Option[T] {
+	if o.IsSome() {
+		fn(o.Value())
 	}
-
-	return &o.v
+	return o
 }
-
-func (o *Option[T]) GetOrInsertFunc(fn func() T) *T {
-...implement
-}
-
-func (o *Option[T]) Insert(t T) -> *T ...implement
-
-func (o *Option[T]) Inspect(fn func(t T)) Option[T] {
-...implement
-}
-
 
 func (o Option[T]) IsNone() bool {
 	return !o.IsSome()
 }
 
+// IsNoneOr returns true if o is none, or if o is some and calling fn with o's value returns true.
 func (o Option[T]) IsNoneOr(fn func(T) bool) bool {
-if o.IsSome()  && !fn(o.Value()) {
-return false
-}
-return true
+	if o.IsSome() && !fn(o.Value()) {
+		return false
+	}
+	return true
 }
 
 func (o Option[T]) IsSome() bool {
@@ -94,7 +131,6 @@ func (o Option[T]) Iter() iter.Seq[T] {
 	}
 }
 
-
 // Map returns Some[U] whose inner value is o's value mapped by f if o is some.
 // Otherwise it returns None[U].
 func (o Option[T]) Map[U any](f func(T) U) Option[U] {
@@ -113,14 +149,14 @@ func (o Option[T]) MapOr[U any](defaultValue U, f func(T) U) U {
 	return f(o.Value())
 }
 
+// MapOrElse returns o's value applied by fn if o is some.
+// Otherwise it returns the result of defaultFn.
 func (o Option[T]) MapOrElse[U any](defaultFn func() U, fn func(T) U) U {
 	if o.IsNone() {
-return defaultFn()
+		return defaultFn()
 	}
-	return Some(fn(o.Value()))
+	return fn(o.Value())
 }
-
-
 
 // Or returns o if o is some, otherwise u.
 func (o Option[T]) Or(u Option[T]) Option[T] {
@@ -140,20 +176,37 @@ func (o Option[T]) OrElse(f func() Option[T]) Option[T] {
 	}
 }
 
+// Unwrap returns o's value if o is some.
+// Otherwise it panics.
 func (o Option[T]) Unwrap() T {
-...implement
+	if o.IsNone() {
+		panic("opt: Unwrap called on a none Option")
+	}
+	return o.v
 }
 
+// UnwrapOr returns o's value if o is some, otherwise t.
 func (o Option[T]) UnwrapOr(t T) T {
-...implement
+	if o.IsSome() {
+		return o.v
+	}
+	return t
 }
 
+// UnwrapOrDefault returns o's value if o is some, otherwise the zero value of T.
 func (o Option[T]) UnwrapOrDefault() T {
-...implement
+	if o.IsSome() {
+		return o.v
+	}
+	return *new(T)
 }
 
+// UnwrapOrElse returns o's value if o is some, otherwise the result of fn.
 func (o Option[T]) UnwrapOrElse(fn func() T) T {
-...implement
+	if o.IsSome() {
+		return o.v
+	}
+	return fn()
 }
 
 // Xor returns o or u if either is some.
@@ -167,5 +220,3 @@ func (o Option[T]) Xor(u Option[T]) Option[T] {
 	}
 	return None[T]()
 }
-
-

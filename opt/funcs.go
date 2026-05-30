@@ -1,9 +1,14 @@
 package opt
 
-
-func Clone ... implement
-
-func CloneCloner ... implement
+// CloneCloner clones o by calling the Clone method on its inner value if o is some.
+//
+// For a custom clone function, use [Option.CloneFunc].
+// An Option[T] whose T only needs a shallow copy can be copied by plain assignment.
+func CloneCloner[T interface{ Clone() T }](o Option[T]) Option[T] {
+	return o.CloneFunc(func(t T) T {
+		return t.Clone()
+	})
+}
 
 // Equal tests equality of l and r then returns true if they are equal, false otherwise
 func Equal[T comparable](l, r Option[T]) bool {
@@ -28,5 +33,3 @@ func Flatten[T any](o Option[Option[T]]) Option[T] {
 	}
 	return v
 }
-
-
