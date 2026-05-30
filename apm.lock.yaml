@@ -1,6 +1,6 @@
 lockfile_version: '1'
-generated_at: '2026-05-29T13:13:56.356927+00:00'
-apm_version: 0.15.0
+generated_at: '2026-05-30T10:15:50.947954+00:00'
+apm_version: 0.16.0
 dependencies:
 - repo_url: ngicks/agents-package
   host: github.com
@@ -58,4 +58,4 @@ dependencies:
 local_deployed_files:
 - .claude/rules/base.local.md
 local_deployed_file_hashes:
-  .claude/rules/base.local.md: sha256:c3a1241fb53c610737198c2a0f541158364ada6c1370c9854036b7d86f8e43d6
+  .claude/rules/base.local.md: sha256:a1e793bb76aa0ba181a3557c471b557d52970e75a713a051c24ad4ac17ac7008
