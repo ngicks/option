@@ -1,5 +1,7 @@
 package opt
 
+import "database/sql"
+
 // Option represents an optional value.
 type Option[T any] struct {
 	some bool

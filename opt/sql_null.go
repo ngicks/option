@@ -10,23 +10,6 @@ var (
 	_ driver.Valuer = SqlNull[any]{}
 )
 
-func FromSqlNull[T any](v sql.Null[T]) Option[T] {
-	if !v.Valid {
-		return None[T]()
-	}
-	return Some(v.V)
-}
-
-func (o Option[T]) SqlNull() sql.Null[T] {
-	if o.IsNone() {
-		return sql.Null[T]{}
-	}
-	return sql.Null[T]{
-		Valid: true,
-		V:     o.Value(),
-	}
-}
-
 // SqlNull[T] adapts Option[T] to sql.Scanner and driver.Valuer.
 type SqlNull[T any] struct {
 	Option[T]
