@@ -1,0 +1,208 @@
+lockfile_version: '1'
+generated_at: '2026-07-20T00:13:45.973198+00:00'
+apm_version: 0.25.0
+dependencies:
+- repo_url: ngicks/agents-package
+  name: agents-package-base-env
+  host: github.com
+  resolved_commit: 78a40bcb72f1001751f2d6d02d658275fb048703
+  version: 1.0.0
+  virtual_path: instructions/base-env.instructions.md
+  is_virtual: true
+  deployed_files:
+  - .claude/rules/base-env.md
+  deployed_file_hashes:
+    .claude/rules/base-env.md: sha256:834357cef083e4933bd628ad77bd0a41d8009782a670d5120a843b66d37863e7
+  content_hash: sha256:44b5990e571633f4e747bd19ca36580eee280ffb123e96833076bd6a402d3243
+- repo_url: ngicks/agents-package
+  name: agents-package-base-preference
+  host: github.com
+  resolved_commit: 78a40bcb72f1001751f2d6d02d658275fb048703
+  version: 1.0.0
+  virtual_path: instructions/base-preference.instructions.md
+  is_virtual: true
+  deployed_files:
+  - .claude/rules/base-preference.md
+  deployed_file_hashes:
+    .claude/rules/base-preference.md: sha256:3f92aaa8276bd2c3e6987f0a21c10d01d9ba1be9a569a9017ded4d973d50fd27
+  content_hash: sha256:8a888d72dc894de9c51565c601880535f4cfad58a9b87f0c27c94320da91ba36
+- repo_url: ngicks/agents-package
+  name: agents-package-go-basics
+  host: github.com
+  resolved_commit: 78a40bcb72f1001751f2d6d02d658275fb048703
+  version: 1.0.0
+  virtual_path: instructions/go/go-basics.instructions.md
+  is_virtual: true
+  deployed_files:
+  - .claude/rules/go-basics.md
+  deployed_file_hashes:
+    .claude/rules/go-basics.md: sha256:feb91c7f9c7fbb752df5390b000d2cc7a15e0397de5e40eaf8cfe37bf2896f34
+  content_hash: sha256:66bae51c80e9bb324b7de4d9a7d451de94ce8eb3ec49620140a30efc2b1111c7
+- repo_url: ngicks/agents-package
+  name: agents-package-go-design-preference
+  host: github.com
+  resolved_commit: 78a40bcb72f1001751f2d6d02d658275fb048703
+  version: 1.0.0
+  virtual_path: instructions/go/go-design-preference.instructions.md
+  is_virtual: true
+  deployed_files:
+  - .claude/rules/go-design-preference.md
+  deployed_file_hashes:
+    .claude/rules/go-design-preference.md: sha256:0a0c45354f94f7333de69d5fe4ff1cb247736155a0ba1645b7db3c101572f773
+  content_hash: sha256:08392ce26cee0ed77f6865678fe518f2e224c3706351936d7e59eed4b5e4d43b
+- repo_url: ngicks/agents-package
+  name: go-check-outdated-patterns
+  host: github.com
+  resolved_commit: 78a40bcb72f1001751f2d6d02d658275fb048703
+  version: 1.0.0
+  virtual_path: skills/go-check-outdated-patterns
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/go-check-outdated-patterns
+  - .agents/skills/go-check-outdated-patterns/SKILL.md
+  - .claude/skills/go-check-outdated-patterns
+  - .claude/skills/go-check-outdated-patterns/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/go-check-outdated-patterns/SKILL.md: sha256:0447897fc0bb662776faa0d7455e9104efa19f6284034edd717d7cd679a4b839
+    .claude/skills/go-check-outdated-patterns/SKILL.md: sha256:0447897fc0bb662776faa0d7455e9104efa19f6284034edd717d7cd679a4b839
+  content_hash: sha256:a94ed31b24c332612dea8e116c226c95e189c0ff29fb2551fd67e094af673994
+- repo_url: ngicks/agents-package
+  name: go-review-checklist
+  host: github.com
+  resolved_commit: 78a40bcb72f1001751f2d6d02d658275fb048703
+  version: 1.0.0
+  virtual_path: skills/go-review-checklist
+  is_virtual: true
+  package_type: claude_skill
+  deployed_files:
+  - .agents/skills/go-review-checklist
+  - .agents/skills/go-review-checklist/SKILL.md
+  - .claude/skills/go-review-checklist
+  - .claude/skills/go-review-checklist/SKILL.md
+  deployed_file_hashes:
+    .agents/skills/go-review-checklist/SKILL.md: sha256:52de3b2cd7351578e72c38574090e75054032a3cfa9b61a4afcff090d1897fd5
+    .claude/skills/go-review-checklist/SKILL.md: sha256:52de3b2cd7351578e72c38574090e75054032a3cfa9b61a4afcff090d1897fd5
+  content_hash: sha256:d1f2432180ac2de13a6a23d83bb879f5c1c552218f7cf55aea9af4c6ffe51f92
+deployments:
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-check-outdated-patterns
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-check-outdated-patterns
+  active_owner: ngicks/agents-package/skills/go-check-outdated-patterns
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-check-outdated-patterns/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-check-outdated-patterns
+  active_owner: ngicks/agents-package/skills/go-check-outdated-patterns
+  content_hash: sha256:0447897fc0bb662776faa0d7455e9104efa19f6284034edd717d7cd679a4b839
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-review-checklist
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-review-checklist
+  active_owner: ngicks/agents-package/skills/go-review-checklist
+  content_hash: null
+- kind: project-relative
+  target: agents
+  value: .agents/skills/go-review-checklist/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-review-checklist
+  active_owner: ngicks/agents-package/skills/go-review-checklist
+  content_hash: sha256:52de3b2cd7351578e72c38574090e75054032a3cfa9b61a4afcff090d1897fd5
+- kind: project-relative
+  target: claude
+  value: .claude/rules/base-env.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/instructions/base-env.instructions.md
+  active_owner: ngicks/agents-package/instructions/base-env.instructions.md
+  content_hash: sha256:834357cef083e4933bd628ad77bd0a41d8009782a670d5120a843b66d37863e7
+- kind: project-relative
+  target: claude
+  value: .claude/rules/base-preference.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/instructions/base-preference.instructions.md
+  active_owner: ngicks/agents-package/instructions/base-preference.instructions.md
+  content_hash: sha256:3f92aaa8276bd2c3e6987f0a21c10d01d9ba1be9a569a9017ded4d973d50fd27
+- kind: project-relative
+  target: claude
+  value: .claude/rules/base.local.md
+  runtime: null
+  scope: project
+  owners:
+  - .
+  active_owner: .
+  content_hash: sha256:5b372d37ac691739ace06d994c9e7716b920c0206aac588cc941e303029052f7
+- kind: project-relative
+  target: claude
+  value: .claude/rules/go-basics.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/instructions/go/go-basics.instructions.md
+  active_owner: ngicks/agents-package/instructions/go/go-basics.instructions.md
+  content_hash: sha256:feb91c7f9c7fbb752df5390b000d2cc7a15e0397de5e40eaf8cfe37bf2896f34
+- kind: project-relative
+  target: claude
+  value: .claude/rules/go-design-preference.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/instructions/go/go-design-preference.instructions.md
+  active_owner: ngicks/agents-package/instructions/go/go-design-preference.instructions.md
+  content_hash: sha256:0a0c45354f94f7333de69d5fe4ff1cb247736155a0ba1645b7db3c101572f773
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-check-outdated-patterns
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-check-outdated-patterns
+  active_owner: ngicks/agents-package/skills/go-check-outdated-patterns
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-check-outdated-patterns/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-check-outdated-patterns
+  active_owner: ngicks/agents-package/skills/go-check-outdated-patterns
+  content_hash: sha256:0447897fc0bb662776faa0d7455e9104efa19f6284034edd717d7cd679a4b839
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-review-checklist
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-review-checklist
+  active_owner: ngicks/agents-package/skills/go-review-checklist
+  content_hash: null
+- kind: project-relative
+  target: claude
+  value: .claude/skills/go-review-checklist/SKILL.md
+  runtime: null
+  scope: project
+  owners:
+  - ngicks/agents-package/skills/go-review-checklist
+  active_owner: ngicks/agents-package/skills/go-review-checklist
+  content_hash: sha256:52de3b2cd7351578e72c38574090e75054032a3cfa9b61a4afcff090d1897fd5
+local_deployed_files:
+- .claude/rules/base.local.md
+local_deployed_file_hashes:
+  .claude/rules/base.local.md: sha256:5b372d37ac691739ace06d994c9e7716b920c0206aac588cc941e303029052f7
