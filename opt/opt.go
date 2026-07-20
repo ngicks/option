@@ -1,3 +1,4 @@
+// Package opt defines 2-state value of T | null.
 package opt
 
 // Option represents an optional value.
