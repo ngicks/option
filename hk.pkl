@@ -1,0 +1,15 @@
+amends "package://github.com/jdx/hk/releases/download/v2.9.0/hk@2.9.0#/Config.pkl"
+
+import ".hk/go-golangci-lint.pkl" as go_golangci_lint
+import ".hk/go-vet-ngcheckers.pkl" as go_vet_ngcheckers
+
+hooks {
+  ["pre-commit"] {
+    fix = true
+    stash = "git"
+    steps {
+      ...go_golangci_lint.steps
+      ...go_vet_ngcheckers.steps
+    }
+  }
+}
