@@ -47,8 +47,12 @@ func Equal[L, R comparable](l, r Either[L, R]) bool {
 	)
 }
 
-// EqualEqualer tests equality of l and r by calling the Equal method implemented on their held values.
-func EqualEqualer[L interface{ Equal(l L) bool }, R interface{ Equal(r R) bool }](l, r Either[L, R]) bool {
+// EqualEqualer tests equality of l and r by calling the Equal method implemented on their held
+// values.
+func EqualEqualer[
+	L interface{ Equal(l L) bool },
+	R interface{ Equal(r R) bool },
+](l, r Either[L, R]) bool {
 	return l.EqualFunc(
 		r,
 		func(i, j L) bool { return i.Equal(j) },

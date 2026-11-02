@@ -1,10 +1,12 @@
+// Package und defines 3-state value of T | null | undefined.
 package und
 
 import (
 	"github.com/ngicks/option/opt"
 )
 
-// Und[T] is a type that can express T (a value of type T), *null* (exists but empty), or *undefined* (absent, unspecified).
+// Und is a type that can express T (a value of type T), *null* (exists but empty), or
+// *undefined* (absent, unspecified).
 //
 // Und[T] implements json.Unmarshaler so that it can be unmarshaled from all of those type.
 //

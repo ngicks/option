@@ -17,7 +17,11 @@ func TestElastic_MarshalJSON(t *testing.T) {
 	}{
 		{"multiple values", elastic.FromValues(1, 2, 3), `[1,2,3]`},
 		{"single value", elastic.FromValue(5), `[5]`},
-		{"none options", elastic.FromOptions(opt.Some(1), opt.None[int](), opt.Some(3)), `[1,null,3]`},
+		{
+			"none options",
+			elastic.FromOptions(opt.Some(1), opt.None[int](), opt.Some(3)),
+			`[1,null,3]`,
+		},
 		{"empty", elastic.FromValues[int](), `[]`},
 		{"null", elastic.Null[int](), `null`},
 		{"undefined", elastic.Undefined[int](), `null`},
@@ -61,7 +65,10 @@ func TestElastic_UnmarshalJSON(t *testing.T) {
 		if err := json.Unmarshal([]byte(`[1,null,3]`), &e); err != nil {
 			t.Fatalf("Unmarshal: %v", err)
 		}
-		if !opt.EqualOptions(e.Options(), opt.Options[int]{opt.Some(1), opt.None[int](), opt.Some(3)}) {
+		if !opt.EqualOptions(
+			e.Options(),
+			opt.Options[int]{opt.Some(1), opt.None[int](), opt.Some(3)},
+		) {
 			t.Errorf("want [some(1) none some(3)], got %v", e.Options())
 		}
 	})

@@ -38,7 +38,11 @@ func (e Either[L, R]) Unpack() (l L, r R) {
 //
 // If L and R are just comparable types, use [Equal].
 // If L and R are implementors of interface { Equal(t T) bool }, e.g time.Time, use [EqualEqualer].
-func (e Either[L, R]) EqualFunc(other Either[L, R], cmpL func(i, j L) bool, cmpR func(i, j R) bool) bool {
+func (e Either[L, R]) EqualFunc(
+	other Either[L, R],
+	cmpL func(i, j L) bool,
+	cmpR func(i, j R) bool,
+) bool {
 	if e.right != other.right {
 		return false
 	}

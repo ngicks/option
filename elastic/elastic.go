@@ -1,4 +1,5 @@
-// Package elastic defines multi-state value of (T | null | undefined | [](null | T)). Useful for consuming Elasticsearch fields or config file.
+// Package elastic defines multi-state value of (T | null | undefined | [](null | T)). Useful for
+// consuming Elasticsearch fields or config file.
 package elastic
 
 import (

@@ -148,7 +148,8 @@ func TestOption_MapOrElse(t *testing.T) {
 	if got := opt.Some(7).MapOrElse(func() string { return "default" }, strconv.Itoa); got != "7" {
 		t.Errorf(`Some(7).MapOrElse = %q, want "7"`, got)
 	}
-	if got := opt.None[int]().MapOrElse(func() string { return "default" }, strconv.Itoa); got != "default" {
+	got := opt.None[int]().MapOrElse(func() string { return "default" }, strconv.Itoa)
+	if got != "default" {
 		t.Errorf(`None.MapOrElse = %q, want "default"`, got)
 	}
 }

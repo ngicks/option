@@ -74,7 +74,7 @@ func decodeRecorded[V any](tokens []xml.Token) (V, error) {
 	return v, err
 }
 
-// UntaggedEither[L, R] adapts Either[L, R] to the untagged JSON representation:
+// UntaggedEither adapts Either[L, R] to the untagged JSON representation:
 // the held value is encoded directly, without the "left" or "right" tag object.
 //
 // Since the encoding is untagged, unmarshaling first attempts to decode the value into L,
@@ -174,7 +174,7 @@ func (u *UntaggedEither[L, R]) UnmarshalXML(d *xml.Decoder, start xml.StartEleme
 	return nil
 }
 
-// UntaggedResult[T] adapts Result[T] to the untagged JSON representation:
+// UntaggedResult adapts Result[T] to the untagged JSON representation:
 // the held value is encoded directly, without the "ok" or "err" tag object.
 // The error is encoded as its message string, or the JSON null if it is nil.
 //
@@ -188,9 +188,9 @@ type UntaggedResult[T any] struct {
 // MarshalJSON implements json.Marshaler.
 func (u UntaggedResult[T]) MarshalJSON() ([]byte, error) {
 	if u.IsErr() {
-		return json.Marshal(errMessage(u.Result.e.r))
+		return json.Marshal(errMessage(u.e.r))
 	}
-	return json.Marshal(u.Result.e.l)
+	return json.Marshal(u.e.l)
 }
 
 // UnmarshalJSON implements json.Unmarshaler.
@@ -202,7 +202,11 @@ func (u *UntaggedResult[T]) UnmarshalJSON(data []byte) error {
 	}
 	var msg *string
 	if err := json.Unmarshal(data, &msg); err != nil {
-		return fmt.Errorf("either: value unmarshals as neither %T nor an error message string: %w", t, err)
+		return fmt.Errorf(
+			"either: value unmarshals as neither %T nor an error message string: %w",
+			t,
+			err,
+		)
 	}
 	u.Result = Err[T](errFromMessage(msg))
 	return nil
@@ -211,10 +215,10 @@ func (u *UntaggedResult[T]) UnmarshalJSON(data []byte) error {
 // MarshalJSONTo implements [encoding/json/v2.MarshalerTo].
 func (u UntaggedResult[T]) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if u.IsErr() {
-		msg := errMessage(u.Result.e.r)
+		msg := errMessage(u.e.r)
 		return jsonv2.MarshalEncode(enc, &msg)
 	}
-	return jsonv2.MarshalEncode(enc, &u.Result.e.l)
+	return jsonv2.MarshalEncode(enc, &u.e.l)
 }
 
 // UnmarshalJSONFrom implements [encoding/json/v2.UnmarshalerFrom].
@@ -231,7 +235,11 @@ func (u *UntaggedResult[T]) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 	}
 	var msg *string
 	if err := jsonv2.Unmarshal(val, &msg, dec.Options()); err != nil {
-		return fmt.Errorf("either: value unmarshals as neither %T nor an error message string: %w", t, err)
+		return fmt.Errorf(
+			"either: value unmarshals as neither %T nor an error message string: %w",
+			t,
+			err,
+		)
 	}
 	u.Result = Err[T](errFromMessage(msg))
 	return nil
@@ -244,12 +252,12 @@ func (u *UntaggedResult[T]) UnmarshalJSONFrom(dec *jsontext.Decoder) error {
 func (u UntaggedResult[T]) MarshalXML(enc *xml.Encoder, start xml.StartElement) error {
 	if u.IsErr() {
 		var msg string
-		if err := u.Result.e.r; err != nil {
+		if err := u.e.r; err != nil {
 			msg = err.Error()
 		}
 		return enc.EncodeElement(msg, start)
 	}
-	return enc.EncodeElement(u.Result.e.l, start)
+	return enc.EncodeElement(u.e.l, start)
 }
 
 // UnmarshalXML implements xml.Unmarshaler.
@@ -276,7 +284,11 @@ func (u *UntaggedResult[T]) UnmarshalXML(d *xml.Decoder, start xml.StartElement)
 	msg, err := decodeRecorded[string](tokens)
 	if err != nil {
 		var t T
-		return fmt.Errorf("either: element unmarshals as neither %T nor an error message string: %w", t, err)
+		return fmt.Errorf(
+			"either: element unmarshals as neither %T nor an error message string: %w",
+			t,
+			err,
+		)
 	}
 	u.Result = Err[T](errors.New(msg))
 	return nil

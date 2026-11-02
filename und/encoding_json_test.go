@@ -71,7 +71,9 @@ func TestUnd_JSON_omitzero(t *testing.T) {
 	}
 
 	// undefined (C) is omitted via omitzero/IsZero; null (B) is kept as null.
-	got, err := json.Marshal(wrapper{A: und.Defined(1), B: und.Null[string](), C: und.Undefined[int]()})
+	got, err := json.Marshal(
+		wrapper{A: und.Defined(1), B: und.Null[string](), C: und.Undefined[int]()},
+	)
 	if err != nil {
 		t.Fatalf("Marshal: %v", err)
 	}

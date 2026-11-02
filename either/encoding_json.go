@@ -38,7 +38,12 @@ func (e *Either[L, R]) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	if len(m) != 1 {
-		return fmt.Errorf("either: tagged Either expects a JSON object with a single %q or %q key, got %d keys", "left", "right", len(m))
+		return fmt.Errorf(
+			"either: tagged Either expects a JSON object with a single %q or %q key, got %d keys",
+			"left",
+			"right",
+			len(m),
+		)
 	}
 	for key, raw := range m {
 		switch key {
@@ -55,7 +60,12 @@ func (e *Either[L, R]) UnmarshalJSON(data []byte) error {
 			}
 			*e = Right[L](r)
 		default:
-			return fmt.Errorf("either: tagged Either expects a %q or %q key, got %q", "left", "right", key)
+			return fmt.Errorf(
+				"either: tagged Either expects a %q or %q key, got %q",
+				"left",
+				"right",
+				key,
+			)
 		}
 	}
 	return nil
@@ -106,7 +116,12 @@ func (r *Result[T]) UnmarshalJSON(data []byte) error {
 		return err
 	}
 	if len(m) != 1 {
-		return fmt.Errorf("either: tagged Result expects a JSON object with a single %q or %q key, got %d keys", "ok", "err", len(m))
+		return fmt.Errorf(
+			"either: tagged Result expects a JSON object with a single %q or %q key, got %d keys",
+			"ok",
+			"err",
+			len(m),
+		)
 	}
 	for key, raw := range m {
 		switch key {
@@ -123,7 +138,12 @@ func (r *Result[T]) UnmarshalJSON(data []byte) error {
 			}
 			*r = Err[T](errFromMessage(msg))
 		default:
-			return fmt.Errorf("either: tagged Result expects an %q or %q key, got %q", "ok", "err", key)
+			return fmt.Errorf(
+				"either: tagged Result expects an %q or %q key, got %q",
+				"ok",
+				"err",
+				key,
+			)
 		}
 	}
 	return nil

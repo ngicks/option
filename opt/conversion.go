@@ -45,7 +45,8 @@ func (o Option[T]) SqlNull() sql.Null[T] {
 // FromOk converts conventional (t T, ok bool) into an option.
 // The options is some if ok is true, none otherwise.
 //
-// For getting values from maps or slices, instead you may want to use [IndexMap], [IndexSlice] respectively.
+// For getting values from maps or slices, instead you may want to use [IndexMap], [IndexSlice]
+// respectively.
 func FromOk[T any](t T, ok bool) Option[T] {
 	if ok {
 		return Some(t)
@@ -74,8 +75,9 @@ func IndexMap[M ~map[K]V, K comparable, V any](m M, key K) Option[V] {
 	return Some(v)
 }
 
-// GetMap gets a value associated with idx.
-// If idx is within interval [0, len(s)), then the Option is some wrapping a value associated to the idx.
+// IndexSlice gets a value associated with idx.
+// If idx is within interval [0, len(s)), then the Option is some wrapping a value associated to the
+// idx.
 // Otherwise it returns none Option.
 func IndexSlice[S ~[]T, T any](s S, idx int) Option[T] {
 	if idx < 0 || len(s) <= idx {

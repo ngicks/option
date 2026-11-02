@@ -35,7 +35,10 @@ func TestEither_XML(t *testing.T) {
 	})
 
 	t.Run("round trip", func(t *testing.T) {
-		for _, in := range []either.Either[int, string]{either.Left[int, string](5), either.Right[int]("foo")} {
+		for _, in := range []either.Either[int, string]{
+			either.Left[int, string](5),
+			either.Right[int]("foo"),
+		} {
 			b, err := xml.Marshal(wrapper{V: in})
 			if err != nil {
 				t.Fatalf("Marshal: %v", err)
@@ -96,7 +99,9 @@ func TestUntagged_XML(t *testing.T) {
 	}
 
 	t.Run("marshals held value directly", func(t *testing.T) {
-		b, err := xml.Marshal(wrapper{V: either.UntaggedEither[int, string]{either.Left[int, string](5)}})
+		b, err := xml.Marshal(
+			wrapper{V: either.UntaggedEither[int, string]{either.Left[int, string](5)}},
+		)
 		if err != nil {
 			t.Fatalf("Marshal: %v", err)
 		}
@@ -104,7 +109,9 @@ func TestUntagged_XML(t *testing.T) {
 			t.Errorf("Marshal = %s, want %s", b, want)
 		}
 
-		b, err = xml.Marshal(resultWrapper{V: either.UntaggedResult[int]{either.Err[int](errors.New("boom"))}})
+		b, err = xml.Marshal(
+			resultWrapper{V: either.UntaggedResult[int]{either.Err[int](errors.New("boom"))}},
+		)
 		if err != nil {
 			t.Fatalf("Marshal: %v", err)
 		}

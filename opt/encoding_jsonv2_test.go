@@ -76,7 +76,9 @@ func TestOption_JSONv2_RoundTrip(t *testing.T) {
 	}
 
 	t.Run("none b is omitted via omitzero", func(t *testing.T) {
-		got, err := jsonv2.Marshal(wrapper{A: opt.Some(1), B: opt.None[string](), C: opt.Some([]int{1, 2})})
+		got, err := jsonv2.Marshal(
+			wrapper{A: opt.Some(1), B: opt.None[string](), C: opt.Some([]int{1, 2})},
+		)
 		if err != nil {
 			t.Fatalf("Marshal: %v", err)
 		}
@@ -86,7 +88,9 @@ func TestOption_JSONv2_RoundTrip(t *testing.T) {
 	})
 
 	t.Run("some b is kept", func(t *testing.T) {
-		got, err := jsonv2.Marshal(wrapper{A: opt.None[int](), B: opt.Some("x"), C: opt.None[[]int]()})
+		got, err := jsonv2.Marshal(
+			wrapper{A: opt.None[int](), B: opt.Some("x"), C: opt.None[[]int]()},
+		)
 		if err != nil {
 			t.Fatalf("Marshal: %v", err)
 		}

@@ -71,7 +71,9 @@ func TestUnd_JSONv2_omitzero(t *testing.T) {
 	}
 
 	t.Run("undefined b is omitted via omitzero", func(t *testing.T) {
-		got, err := jsonv2.Marshal(wrapper{A: und.Defined(1), B: und.Undefined[string](), C: und.Null[int]()})
+		got, err := jsonv2.Marshal(
+			wrapper{A: und.Defined(1), B: und.Undefined[string](), C: und.Null[int]()},
+		)
 		if err != nil {
 			t.Fatalf("Marshal: %v", err)
 		}
@@ -81,7 +83,9 @@ func TestUnd_JSONv2_omitzero(t *testing.T) {
 	})
 
 	t.Run("null b is kept", func(t *testing.T) {
-		got, err := jsonv2.Marshal(wrapper{A: und.Defined(1), B: und.Null[string](), C: und.Defined(2)})
+		got, err := jsonv2.Marshal(
+			wrapper{A: und.Defined(1), B: und.Null[string](), C: und.Defined(2)},
+		)
 		if err != nil {
 			t.Fatalf("Marshal: %v", err)
 		}

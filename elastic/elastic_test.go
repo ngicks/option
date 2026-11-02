@@ -12,7 +12,13 @@ import (
 func TestElastic_States(t *testing.T) {
 	d := elastic.FromValues(1, 2, 3)
 	if !d.IsDefined() || d.IsNull() || d.IsUndefined() || d.IsZero() {
-		t.Errorf("FromValues: defined=%t null=%t undefined=%t zero=%t", d.IsDefined(), d.IsNull(), d.IsUndefined(), d.IsZero())
+		t.Errorf(
+			"FromValues: defined=%t null=%t undefined=%t zero=%t",
+			d.IsDefined(),
+			d.IsNull(),
+			d.IsUndefined(),
+			d.IsZero(),
+		)
 	}
 	if d.Value() != 1 {
 		t.Errorf("FromValues(1,2,3).Value() = %d, want 1", d.Value())
@@ -23,17 +29,33 @@ func TestElastic_States(t *testing.T) {
 
 	s := elastic.FromValue(5)
 	if !s.IsDefined() || s.Value() != 5 || !slices.Equal(s.Values(), []int{5}) {
-		t.Errorf("FromValue(5): defined=%t value=%d values=%v", s.IsDefined(), s.Value(), s.Values())
+		t.Errorf(
+			"FromValue(5): defined=%t value=%d values=%v",
+			s.IsDefined(),
+			s.Value(),
+			s.Values(),
+		)
 	}
 
 	n := elastic.Null[int]()
 	if n.IsDefined() || !n.IsNull() || n.IsUndefined() {
-		t.Errorf("Null: defined=%t null=%t undefined=%t", n.IsDefined(), n.IsNull(), n.IsUndefined())
+		t.Errorf(
+			"Null: defined=%t null=%t undefined=%t",
+			n.IsDefined(),
+			n.IsNull(),
+			n.IsUndefined(),
+		)
 	}
 
 	u := elastic.Undefined[int]()
 	if u.IsDefined() || u.IsNull() || !u.IsUndefined() || !u.IsZero() {
-		t.Errorf("Undefined: defined=%t null=%t undefined=%t zero=%t", u.IsDefined(), u.IsNull(), u.IsUndefined(), u.IsZero())
+		t.Errorf(
+			"Undefined: defined=%t null=%t undefined=%t zero=%t",
+			u.IsDefined(),
+			u.IsNull(),
+			u.IsUndefined(),
+			u.IsZero(),
+		)
 	}
 	// Zero value of Elastic[T] is undefined.
 	var zero elastic.Elastic[int]
@@ -123,7 +145,13 @@ func TestElastic_Options(t *testing.T) {
 	}
 
 	one := 1
-	if got := elastic.FromPointers(&one, nil); !opt.EqualOptions(got.Options(), opt.Options[int]{opt.Some(1), opt.None[int]()}) {
+	if got := elastic.FromPointers(
+		&one,
+		nil,
+	); !opt.EqualOptions(
+		got.Options(),
+		opt.Options[int]{opt.Some(1), opt.None[int]()},
+	) {
 		t.Errorf("FromPointers(&1, nil).Options() = %v", got.Options())
 	}
 }

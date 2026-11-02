@@ -67,7 +67,10 @@ func TestEither_Fold_Map_Flip(t *testing.T) {
 	if got := r.MapLeft(strconv.Itoa); !got.IsRight() || got.UnwrapRight() != "foo" {
 		t.Errorf("Right(foo).MapLeft(itoa) = %v, want right(foo)", got)
 	}
-	if got := r.MapRight(func(s string) int { return len(s) }); !got.IsRight() || got.UnwrapRight() != 3 {
+	if got := r.MapRight(
+		func(s string) int { return len(s) },
+	); !got.IsRight() ||
+		got.UnwrapRight() != 3 {
 		t.Errorf("Right(foo).MapRight(len) = %v, want right(3)", got)
 	}
 
@@ -107,23 +110,32 @@ func TestEither_SideCombinators(t *testing.T) {
 	if got := l.LeftAnd(either.Left[bool, string](true)); !got.IsLeft() || !got.UnwrapLeft() {
 		t.Errorf("Left(5).LeftAnd(Left(true)) = %v, want left(true)", got)
 	}
-	if got := r.LeftAnd(either.Left[bool, string](true)); !got.IsRight() || got.UnwrapRight() != "foo" {
+	if got := r.LeftAnd(
+		either.Left[bool, string](true),
+	); !got.IsRight() ||
+		got.UnwrapRight() != "foo" {
 		t.Errorf("Right(foo).LeftAnd(Left(true)) = %v, want right(foo)", got)
 	}
-	if got := l.LeftAndThen(func(i int) either.Either[bool, string] { return either.Left[bool, string](i == 5) }); !got.UnwrapLeft() {
+	if got := l.LeftAndThen(
+		func(i int) either.Either[bool, string] { return either.Left[bool, string](i == 5) },
+	); !got.UnwrapLeft() {
 		t.Errorf("Left(5).LeftAndThen = %v, want left(true)", got)
 	}
 	if got := l.RightAnd(either.Right[int](true)); !got.IsLeft() || got.UnwrapLeft() != 5 {
 		t.Errorf("Left(5).RightAnd(Right(true)) = %v, want left(5)", got)
 	}
-	if got := r.RightAndThen(func(s string) either.Either[int, bool] { return either.Right[int](s == "foo") }); !got.UnwrapRight() {
+	if got := r.RightAndThen(
+		func(s string) either.Either[int, bool] { return either.Right[int](s == "foo") },
+	); !got.UnwrapRight() {
 		t.Errorf("Right(foo).RightAndThen = %v, want right(true)", got)
 	}
 
-	if !l.IsLeftAnd(func(i int) bool { return i == 5 }) || r.IsLeftAnd(func(int) bool { return true }) {
+	if !l.IsLeftAnd(func(i int) bool { return i == 5 }) ||
+		r.IsLeftAnd(func(int) bool { return true }) {
 		t.Error("IsLeftAnd misbehaves")
 	}
-	if !r.IsRightAnd(func(s string) bool { return s == "foo" }) || l.IsRightAnd(func(string) bool { return true }) {
+	if !r.IsRightAnd(func(s string) bool { return s == "foo" }) ||
+		l.IsRightAnd(func(string) bool { return true }) {
 		t.Error("IsRightAnd misbehaves")
 	}
 
@@ -187,46 +199,78 @@ func TestEither_Flatten(t *testing.T) {
 	innerL := either.Left[int, string](5)
 	innerR := either.Right[int]("foo")
 
-	if got := either.FlattenLeft(either.Left[either.Either[int, string], string](innerL)); !got.IsLeft() || got.UnwrapLeft() != 5 {
+	if got := either.FlattenLeft(
+		either.Left[either.Either[int, string], string](innerL),
+	); !got.IsLeft() ||
+		got.UnwrapLeft() != 5 {
 		t.Errorf("FlattenLeft(Left(Left(5))) = %v, want left(5)", got)
 	}
-	if got := either.FlattenLeft(either.Right[either.Either[int, string]]("bar")); !got.IsRight() || got.UnwrapRight() != "bar" {
+	if got := either.FlattenLeft(
+		either.Right[either.Either[int, string]]("bar"),
+	); !got.IsRight() ||
+		got.UnwrapRight() != "bar" {
 		t.Errorf("FlattenLeft(Right(bar)) = %v, want right(bar)", got)
 	}
 
-	if got := either.FlattenRight(either.Right[int](innerR)); !got.IsRight() || got.UnwrapRight() != "foo" {
+	if got := either.FlattenRight(
+		either.Right[int](innerR),
+	); !got.IsRight() ||
+		got.UnwrapRight() != "foo" {
 		t.Errorf("FlattenRight(Right(Right(foo))) = %v, want right(foo)", got)
 	}
-	if got := either.FlattenRight(either.Left[int, either.Either[int, string]](7)); !got.IsLeft() || got.UnwrapLeft() != 7 {
+	if got := either.FlattenRight(
+		either.Left[int, either.Either[int, string]](7),
+	); !got.IsLeft() ||
+		got.UnwrapLeft() != 7 {
 		t.Errorf("FlattenRight(Left(7)) = %v, want left(7)", got)
 	}
 
-	if got := either.FlattenEither(either.Left[either.Either[int, string], either.Either[int, string]](innerL)); !got.IsLeft() || got.UnwrapLeft() != 5 {
+	if got := either.FlattenEither(
+		either.Left[either.Either[int, string], either.Either[int, string]](innerL),
+	); !got.IsLeft() ||
+		got.UnwrapLeft() != 5 {
 		t.Errorf("FlattenEither(Left(Left(5))) = %v, want left(5)", got)
 	}
-	if got := either.FlattenEither(either.Right[either.Either[int, string]](innerR)); !got.IsRight() || got.UnwrapRight() != "foo" {
+	if got := either.FlattenEither(
+		either.Right[either.Either[int, string]](innerR),
+	); !got.IsRight() ||
+		got.UnwrapRight() != "foo" {
 		t.Errorf("FlattenEither(Right(Right(foo))) = %v, want right(foo)", got)
 	}
 }
 
 func TestEither_Transpose(t *testing.T) {
-	if got := either.TransposeLeft(either.Left[opt.Option[int], string](opt.Some(5))); !got.IsSome() || !got.Value().IsLeft() || got.Value().UnwrapLeft() != 5 {
+	if got := either.TransposeLeft(
+		either.Left[opt.Option[int], string](opt.Some(5)),
+	); !got.IsSome() || !got.Value().IsLeft() ||
+		got.Value().UnwrapLeft() != 5 {
 		t.Errorf("TransposeLeft(Left(Some(5))) = %v, want some(left(5))", got)
 	}
-	if got := either.TransposeLeft(either.Left[opt.Option[int], string](opt.None[int]())); got.IsSome() {
+	if got := either.TransposeLeft(
+		either.Left[opt.Option[int], string](opt.None[int]()),
+	); got.IsSome() {
 		t.Errorf("TransposeLeft(Left(None)) = %v, want none", got)
 	}
-	if got := either.TransposeLeft(either.Right[opt.Option[int]]("foo")); !got.IsSome() || !got.Value().IsRight() || got.Value().UnwrapRight() != "foo" {
+	if got := either.TransposeLeft(
+		either.Right[opt.Option[int]]("foo"),
+	); !got.IsSome() || !got.Value().IsRight() ||
+		got.Value().UnwrapRight() != "foo" {
 		t.Errorf("TransposeLeft(Right(foo)) = %v, want some(right(foo))", got)
 	}
 
-	if got := either.TransposeRight(either.Right[int](opt.Some("foo"))); !got.IsSome() || !got.Value().IsRight() || got.Value().UnwrapRight() != "foo" {
+	if got := either.TransposeRight(
+		either.Right[int](opt.Some("foo")),
+	); !got.IsSome() || !got.Value().IsRight() ||
+		got.Value().UnwrapRight() != "foo" {
 		t.Errorf("TransposeRight(Right(Some(foo))) = %v, want some(right(foo))", got)
 	}
 	if got := either.TransposeRight(either.Right[int](opt.None[string]())); got.IsSome() {
 		t.Errorf("TransposeRight(Right(None)) = %v, want none", got)
 	}
-	if got := either.TransposeRight(either.Left[int, opt.Option[string]](5)); !got.IsSome() || !got.Value().IsLeft() || got.Value().UnwrapLeft() != 5 {
+	if got := either.TransposeRight(
+		either.Left[int, opt.Option[string]](5),
+	); !got.IsSome() || !got.Value().IsLeft() ||
+		got.Value().UnwrapLeft() != 5 {
 		t.Errorf("TransposeRight(Left(5)) = %v, want some(left(5))", got)
 	}
 }

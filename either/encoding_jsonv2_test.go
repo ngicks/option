@@ -52,7 +52,13 @@ func TestEither_UnmarshalJSONFrom(t *testing.T) {
 	})
 
 	t.Run("invalid inputs error and keep e unchanged", func(t *testing.T) {
-		for _, in := range []string{`5`, `{}`, `{"up":5}`, `{"left":5,"right":"foo"}`, `{"left":"not a number"}`} {
+		for _, in := range []string{
+			`5`,
+			`{}`,
+			`{"up":5}`,
+			`{"left":5,"right":"foo"}`,
+			`{"left":"not a number"}`,
+		} {
 			e := either.Left[int, string](5)
 			if err := jsonv2.Unmarshal([]byte(in), &e); err == nil {
 				t.Fatalf("Unmarshal(%s): want error, got nil", in)
@@ -191,7 +197,9 @@ func TestEither_JSONv2_RoundTrip(t *testing.T) {
 	if err != nil {
 		t.Fatalf("Marshal: %v", err)
 	}
-	if want := `{"a":{"right":"foo"},"b":{"left":true},"c":{"right":["a","b"]}}`; string(b) != want {
+	if want := `{"a":{"right":"foo"},"b":{"left":true},"c":{"right":["a","b"]}}`; string(
+		b,
+	) != want {
 		t.Errorf("Marshal = %s, want %s", b, want)
 	}
 	var out wrapper

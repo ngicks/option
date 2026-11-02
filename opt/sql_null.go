@@ -10,7 +10,7 @@ var (
 	_ driver.Valuer = SqlNull[any]{}
 )
 
-// SqlNull[T] adapts Option[T] to sql.Scanner and driver.Valuer.
+// SqlNull adapts Option[T] to sql.Scanner and driver.Valuer.
 type SqlNull[T any] struct {
 	Option[T]
 }
@@ -58,7 +58,7 @@ func (n *SqlNull[T]) Scan(src any) error {
 // In this respect, T should not be a pointer type or Option[T] should not store nil value.
 // Otherwise, SqlNull[T] falls back to sql.Null[T] as driver.Valuer.
 func (n SqlNull[T]) Value() (driver.Value, error) {
-	if n.Option.IsNone() {
+	if n.IsNone() {
 		return nil, nil
 	}
 

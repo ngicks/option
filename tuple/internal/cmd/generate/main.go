@@ -322,7 +322,8 @@ func main() {
 	} {
 		b := &strings.Builder{}
 		b.WriteString(header)
-		if err := template.Must(template.New(name).Funcs(funcs).Parse(tmpl)).Execute(b, arities); err != nil {
+		if err := template.Must(template.New(name).Funcs(funcs).Parse(tmpl)).
+			Execute(b, arities); err != nil {
 			panic(fmt.Errorf("execute %s: %w", name, err))
 		}
 		formatted, err := format.Source([]byte(b.String()))

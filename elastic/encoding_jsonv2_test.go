@@ -17,7 +17,11 @@ func TestElastic_MarshalJSONTo(t *testing.T) {
 	}{
 		{"multiple values", elastic.FromValues(1, 2, 3), `[1,2,3]`},
 		{"single value", elastic.FromValue(5), `[5]`},
-		{"none options", elastic.FromOptions(opt.Some(1), opt.None[int](), opt.Some(3)), `[1,null,3]`},
+		{
+			"none options",
+			elastic.FromOptions(opt.Some(1), opt.None[int](), opt.Some(3)),
+			`[1,null,3]`,
+		},
 		{"empty", elastic.FromValues[int](), `[]`},
 		{"null", elastic.Null[int](), `null`},
 		{"undefined", elastic.Undefined[int](), `null`},
@@ -61,7 +65,10 @@ func TestElastic_UnmarshalJSONFrom(t *testing.T) {
 		if err := jsonv2.Unmarshal([]byte(`[1,null,3]`), &e); err != nil {
 			t.Fatalf("Unmarshal: %v", err)
 		}
-		if !opt.EqualOptions(e.Options(), opt.Options[int]{opt.Some(1), opt.None[int](), opt.Some(3)}) {
+		if !opt.EqualOptions(
+			e.Options(),
+			opt.Options[int]{opt.Some(1), opt.None[int](), opt.Some(3)},
+		) {
 			t.Errorf("want [some(1) none some(3)], got %v", e.Options())
 		}
 	})
@@ -95,7 +102,13 @@ func TestElastic_JSONv2_omitzero(t *testing.T) {
 	}
 
 	t.Run("undefined b is omitted via omitzero", func(t *testing.T) {
-		got, err := jsonv2.Marshal(wrapper{A: elastic.FromValue(1), B: elastic.Undefined[string](), C: elastic.Null[int]()})
+		got, err := jsonv2.Marshal(
+			wrapper{
+				A: elastic.FromValue(1),
+				B: elastic.Undefined[string](),
+				C: elastic.Null[int](),
+			},
+		)
 		if err != nil {
 			t.Fatalf("Marshal: %v", err)
 		}
@@ -105,7 +118,13 @@ func TestElastic_JSONv2_omitzero(t *testing.T) {
 	})
 
 	t.Run("null b is kept", func(t *testing.T) {
-		got, err := jsonv2.Marshal(wrapper{A: elastic.FromValue(1), B: elastic.Null[string](), C: elastic.FromValues(2, 3)})
+		got, err := jsonv2.Marshal(
+			wrapper{
+				A: elastic.FromValue(1),
+				B: elastic.Null[string](),
+				C: elastic.FromValues(2, 3),
+			},
+		)
 		if err != nil {
 			t.Fatalf("Marshal: %v", err)
 		}

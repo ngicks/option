@@ -10,7 +10,13 @@ import (
 func TestUnd_States(t *testing.T) {
 	d := und.Defined(5)
 	if !d.IsDefined() || d.IsNull() || d.IsUndefined() || d.IsZero() {
-		t.Errorf("Defined(5): defined=%t null=%t undefined=%t zero=%t", d.IsDefined(), d.IsNull(), d.IsUndefined(), d.IsZero())
+		t.Errorf(
+			"Defined(5): defined=%t null=%t undefined=%t zero=%t",
+			d.IsDefined(),
+			d.IsNull(),
+			d.IsUndefined(),
+			d.IsZero(),
+		)
 	}
 	if d.Value() != 5 {
 		t.Errorf("Defined(5).Value() = %d, want 5", d.Value())
@@ -18,12 +24,23 @@ func TestUnd_States(t *testing.T) {
 
 	n := und.Null[int]()
 	if n.IsDefined() || !n.IsNull() || n.IsUndefined() {
-		t.Errorf("Null: defined=%t null=%t undefined=%t", n.IsDefined(), n.IsNull(), n.IsUndefined())
+		t.Errorf(
+			"Null: defined=%t null=%t undefined=%t",
+			n.IsDefined(),
+			n.IsNull(),
+			n.IsUndefined(),
+		)
 	}
 
 	u := und.Undefined[int]()
 	if u.IsDefined() || u.IsNull() || !u.IsUndefined() || !u.IsZero() {
-		t.Errorf("Undefined: defined=%t null=%t undefined=%t zero=%t", u.IsDefined(), u.IsNull(), u.IsUndefined(), u.IsZero())
+		t.Errorf(
+			"Undefined: defined=%t null=%t undefined=%t zero=%t",
+			u.IsDefined(),
+			u.IsNull(),
+			u.IsUndefined(),
+			u.IsZero(),
+		)
 	}
 	// Zero value of Und[T] is undefined.
 	var zero und.Und[int]

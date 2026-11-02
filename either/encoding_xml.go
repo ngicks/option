@@ -27,7 +27,11 @@ func marshalSingleKeyXML(enc *xml.Encoder, start xml.StartElement, key string, v
 // unmarshalSingleKeyXML consumes the element opened by start,
 // expecting exactly one child element whose local name is a key of decode,
 // and calls the matching callback with that child's start element.
-func unmarshalSingleKeyXML(d *xml.Decoder, typ, key1, key2 string, decode map[string]func(start xml.StartElement) error) error {
+func unmarshalSingleKeyXML(
+	d *xml.Decoder,
+	typ, key1, key2 string,
+	decode map[string]func(start xml.StartElement) error,
+) error {
 	seen := false
 	for {
 		tok, err := d.Token()
@@ -37,11 +41,22 @@ func unmarshalSingleKeyXML(d *xml.Decoder, typ, key1, key2 string, decode map[st
 		switch tok := tok.(type) {
 		case xml.StartElement:
 			if seen {
-				return fmt.Errorf("either: tagged %s expects a single <%s> or <%s> element, got more", typ, key1, key2)
+				return fmt.Errorf(
+					"either: tagged %s expects a single <%s> or <%s> element, got more",
+					typ,
+					key1,
+					key2,
+				)
 			}
 			fn, ok := decode[tok.Name.Local]
 			if !ok {
-				return fmt.Errorf("either: tagged %s expects a <%s> or <%s> element, got <%s>", typ, key1, key2, tok.Name.Local)
+				return fmt.Errorf(
+					"either: tagged %s expects a <%s> or <%s> element, got <%s>",
+					typ,
+					key1,
+					key2,
+					tok.Name.Local,
+				)
 			}
 			if err := fn(tok); err != nil {
 				return err
@@ -49,7 +64,12 @@ func unmarshalSingleKeyXML(d *xml.Decoder, typ, key1, key2 string, decode map[st
 			seen = true
 		case xml.EndElement:
 			if !seen {
-				return fmt.Errorf("either: tagged %s expects a single <%s> or <%s> element, got none", typ, key1, key2)
+				return fmt.Errorf(
+					"either: tagged %s expects a single <%s> or <%s> element, got none",
+					typ,
+					key1,
+					key2,
+				)
 			}
 			return nil
 		}
@@ -75,24 +95,30 @@ func (e *Either[L, R]) UnmarshalXML(d *xml.Decoder, start xml.StartElement) erro
 	// Decode into a fresh value so that e keeps a valid state
 	// even if decoding fails partway through.
 	var decoded Either[L, R]
-	err := unmarshalSingleKeyXML(d, "Either", "left", "right", map[string]func(start xml.StartElement) error{
-		"left": func(start xml.StartElement) error {
-			var l L
-			if err := d.DecodeElement(&l, &start); err != nil {
-				return err
-			}
-			decoded = Left[L, R](l)
-			return nil
+	err := unmarshalSingleKeyXML(
+		d,
+		"Either",
+		"left",
+		"right",
+		map[string]func(start xml.StartElement) error{
+			"left": func(start xml.StartElement) error {
+				var l L
+				if err := d.DecodeElement(&l, &start); err != nil {
+					return err
+				}
+				decoded = Left[L, R](l)
+				return nil
+			},
+			"right": func(start xml.StartElement) error {
+				var r R
+				if err := d.DecodeElement(&r, &start); err != nil {
+					return err
+				}
+				decoded = Right[L](r)
+				return nil
+			},
 		},
-		"right": func(start xml.StartElement) error {
-			var r R
-			if err := d.DecodeElement(&r, &start); err != nil {
-				return err
-			}
-			decoded = Right[L](r)
-			return nil
-		},
-	})
+	)
 	if err != nil {
 		return err
 	}
@@ -124,24 +150,30 @@ func (r *Result[T]) UnmarshalXML(d *xml.Decoder, start xml.StartElement) error {
 	// Decode into a fresh value so that r keeps a valid state
 	// even if decoding fails partway through.
 	var decoded Result[T]
-	err := unmarshalSingleKeyXML(d, "Result", "ok", "err", map[string]func(start xml.StartElement) error{
-		"ok": func(start xml.StartElement) error {
-			var t T
-			if err := d.DecodeElement(&t, &start); err != nil {
-				return err
-			}
-			decoded = Ok(t)
-			return nil
+	err := unmarshalSingleKeyXML(
+		d,
+		"Result",
+		"ok",
+		"err",
+		map[string]func(start xml.StartElement) error{
+			"ok": func(start xml.StartElement) error {
+				var t T
+				if err := d.DecodeElement(&t, &start); err != nil {
+					return err
+				}
+				decoded = Ok(t)
+				return nil
+			},
+			"err": func(start xml.StartElement) error {
+				var msg string
+				if err := d.DecodeElement(&msg, &start); err != nil {
+					return err
+				}
+				decoded = Err[T](errors.New(msg))
+				return nil
+			},
 		},
-		"err": func(start xml.StartElement) error {
-			var msg string
-			if err := d.DecodeElement(&msg, &start); err != nil {
-				return err
-			}
-			decoded = Err[T](errors.New(msg))
-			return nil
-		},
-	})
+	)
 	if err != nil {
 		return err
 	}

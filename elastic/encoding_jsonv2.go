@@ -17,7 +17,8 @@ var (
 // It encodes a defined Elastic as the JSON array of its options, none options as the JSON null,
 // even if it was unmarshaled from a single value,
 // and both null and undefined Elastic as the JSON null.
-// Attach the `json:",omitzero"` option to an Elastic struct field to omit undefined values entirely.
+// Attach the `json:",omitzero"` option to an Elastic struct field to omit undefined values
+// entirely.
 func (e Elastic[T]) MarshalJSONTo(enc *jsontext.Encoder) error {
 	if !e.IsDefined() {
 		return enc.WriteToken(jsontext.Null)

@@ -26,7 +26,9 @@ func TestElastic_XML(t *testing.T) {
 	})
 
 	t.Run("none options encode nothing", func(t *testing.T) {
-		b, err := xml.Marshal(wrapper{V: elastic.FromOptions(opt.Some(1), opt.None[int](), opt.Some(2))})
+		b, err := xml.Marshal(
+			wrapper{V: elastic.FromOptions(opt.Some(1), opt.None[int](), opt.Some(2))},
+		)
 		if err != nil {
 			t.Fatalf("Marshal: %v", err)
 		}

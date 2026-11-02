@@ -47,7 +47,9 @@ func TestResult_Combinators(t *testing.T) {
 	if got := e.And(either.Ok("foo")); !got.IsErr() || !errors.Is(got.Err(), sentinel) {
 		t.Errorf("Err.And(Ok(foo)) = %v, want err(boom)", got)
 	}
-	if got := ok.AndThen(func(i int) either.Result[string] { return either.Ok(strconv.Itoa(i)) }); got.Value() != "5" {
+	if got := ok.AndThen(
+		func(i int) either.Result[string] { return either.Ok(strconv.Itoa(i)) },
+	); got.Value() != "5" {
 		t.Errorf("Ok(5).AndThen(itoa) = %v, want ok(5)", got)
 	}
 
@@ -64,21 +66,28 @@ func TestResult_Combinators(t *testing.T) {
 	if got := ok.MapOr("x", strconv.Itoa); got != "5" {
 		t.Errorf("Ok(5).MapOr = %s, want 5", got)
 	}
-	if got := e.MapOrElse(func(err error) string { return err.Error() }, strconv.Itoa); got != "boom" {
+	if got := e.MapOrElse(
+		func(err error) string { return err.Error() },
+		strconv.Itoa,
+	); got != "boom" {
 		t.Errorf("Err.MapOrElse = %s, want boom", got)
 	}
 
 	if got := e.Or(ok); !got.IsOk() || got.Value() != 5 {
 		t.Errorf("Err.Or(Ok(5)) = %v, want ok(5)", got)
 	}
-	if got := e.OrElse(func(err error) either.Result[int] { return either.Ok(1) }); got.Value() != 1 {
+	if got := e.OrElse(
+		func(err error) either.Result[int] { return either.Ok(1) },
+	); got.Value() != 1 {
 		t.Errorf("Err.OrElse = %v, want ok(1)", got)
 	}
 
-	if !ok.IsOkAnd(func(i int) bool { return i == 5 }) || ok.IsOkAnd(func(i int) bool { return i == 6 }) {
+	if !ok.IsOkAnd(func(i int) bool { return i == 5 }) ||
+		ok.IsOkAnd(func(i int) bool { return i == 6 }) {
 		t.Error("IsOkAnd misbehaves on Ok(5)")
 	}
-	if !e.IsErrAnd(func(err error) bool { return errors.Is(err, sentinel) }) || ok.IsErrAnd(func(error) bool { return true }) {
+	if !e.IsErrAnd(func(err error) bool { return errors.Is(err, sentinel) }) ||
+		ok.IsErrAnd(func(error) bool { return true }) {
 		t.Error("IsErrAnd misbehaves")
 	}
 
@@ -157,10 +166,16 @@ func TestResult_Flatten_Transpose(t *testing.T) {
 	if got := either.Flatten(either.Ok(either.Ok(5))); !got.IsOk() || got.Value() != 5 {
 		t.Errorf("Flatten(Ok(Ok(5))) = %v, want ok(5)", got)
 	}
-	if got := either.Flatten(either.Ok(either.Err[int](sentinel))); !got.IsErr() || !errors.Is(got.Err(), sentinel) {
+	if got := either.Flatten(
+		either.Ok(either.Err[int](sentinel)),
+	); !got.IsErr() ||
+		!errors.Is(got.Err(), sentinel) {
 		t.Errorf("Flatten(Ok(Err(boom))) = %v, want err(boom)", got)
 	}
-	if got := either.Flatten(either.Err[either.Result[int]](sentinel)); !got.IsErr() || !errors.Is(got.Err(), sentinel) {
+	if got := either.Flatten(
+		either.Err[either.Result[int]](sentinel),
+	); !got.IsErr() ||
+		!errors.Is(got.Err(), sentinel) {
 		t.Errorf("Flatten(Err(boom)) = %v, want err(boom)", got)
 	}
 

@@ -156,11 +156,22 @@ func readSingleKeyObjectStart(dec *jsontext.Decoder, typ, key1, key2 string) (st
 		return "", err
 	}
 	if tok.Kind() == jsontext.KindEndObject {
-		return "", fmt.Errorf("either: tagged %s expects a JSON object with a single %q or %q key, got an empty object", typ, key1, key2)
+		return "", fmt.Errorf(
+			"either: tagged %s expects a JSON object with a single %q or %q key, got an empty object",
+			typ,
+			key1,
+			key2,
+		)
 	}
 	key := tok.String()
 	if key != key1 && key != key2 {
-		return "", fmt.Errorf("either: tagged %s expects a %q or %q key, got %q", typ, key1, key2, key)
+		return "", fmt.Errorf(
+			"either: tagged %s expects a %q or %q key, got %q",
+			typ,
+			key1,
+			key2,
+			key,
+		)
 	}
 	return key, nil
 }
@@ -173,7 +184,12 @@ func readSingleKeyObjectEnd(dec *jsontext.Decoder, typ, key1, key2 string) error
 		return err
 	}
 	if tok.Kind() != jsontext.KindEndObject {
-		return fmt.Errorf("either: tagged %s expects a JSON object with a single %q or %q key, got more", typ, key1, key2)
+		return fmt.Errorf(
+			"either: tagged %s expects a JSON object with a single %q or %q key, got more",
+			typ,
+			key1,
+			key2,
+		)
 	}
 	return nil
 }
