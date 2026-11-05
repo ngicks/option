@@ -199,3 +199,36 @@ func TestElastic_Coalesce(t *testing.T) {
 		t.Errorf("FromValue(5).Coalesce(true) = %v, want defined(5)", e)
 	}
 }
+
+func TestElastic_MapInner(t *testing.T) {
+	appendSeven := func(u und.Und[opt.Options[int]]) und.Und[opt.Options[int]] {
+		if !u.IsDefined() {
+			return u
+		}
+		return und.Defined(append(u.Value(), opt.Some(7)))
+	}
+
+	options := make(opt.Options[int], 1, 2)
+	options[0] = opt.Some(1)
+	orig := elastic.FromOptions(options...)
+	mapped := orig.MapInner(appendSeven)
+	if got := mapped.Values(); !slices.Equal(got, []int{1, 7}) {
+		t.Errorf("MapInner(appendSeven).Values() = %v, want [1 7]", got)
+	}
+	if got := options[:2][1]; got.IsSome() {
+		t.Errorf("MapInner wrote %v into the backing array of e", got)
+	}
+
+	if e := elastic.Null[int]().MapInner(appendSeven); !e.IsNull() {
+		t.Errorf("Null.MapInner(appendSeven) = %v, want null", e)
+	}
+	if e := elastic.Undefined[int]().MapInner(appendSeven); !e.IsUndefined() {
+		t.Errorf("Undefined.MapInner(appendSeven) = %v, want undefined", e)
+	}
+	toNull := func(und.Und[opt.Options[int]]) und.Und[opt.Options[int]] {
+		return und.Null[opt.Options[int]]()
+	}
+	if e := elastic.FromValue(1).MapInner(toNull); !e.IsNull() {
+		t.Errorf("FromValue(1).MapInner(toNull) = %v, want null", e)
+	}
+}

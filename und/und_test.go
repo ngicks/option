@@ -4,6 +4,7 @@ import (
 	"slices"
 	"testing"
 
+	"github.com/ngicks/option/opt"
 	"github.com/ngicks/option/und"
 )
 
@@ -114,5 +115,29 @@ func TestUnd_CloneFunc(t *testing.T) {
 	orig.Value()[0] = 99
 	if got := cloned.Value(); got[0] != 1 {
 		t.Errorf("CloneFunc did not deep copy: cloned[0] = %d, want 1", got[0])
+	}
+}
+
+func TestUnd_MapInner(t *testing.T) {
+	toNull := func(o opt.Option[opt.Option[int]]) opt.Option[opt.Option[int]] {
+		return opt.Some(opt.None[int]())
+	}
+	if u := und.Defined(5).MapInner(toNull); !u.IsNull() {
+		t.Errorf("Defined(5).MapInner(toNull) = %v, want null", u)
+	}
+
+	double := func(o opt.Option[opt.Option[int]]) opt.Option[opt.Option[int]] {
+		return o.Map(func(o opt.Option[int]) opt.Option[int] {
+			return o.Map(func(i int) int { return i * 2 })
+		})
+	}
+	if u := und.Defined(5).MapInner(double); !u.IsDefined() || u.Value() != 10 {
+		t.Errorf("Defined(5).MapInner(double) = %v, want defined(10)", u)
+	}
+	if u := und.Null[int]().MapInner(double); !u.IsNull() {
+		t.Errorf("Null.MapInner(double) = %v, want null", u)
+	}
+	if u := und.Undefined[int]().MapInner(double); !u.IsUndefined() {
+		t.Errorf("Undefined.MapInner(double) = %v, want undefined", u)
 	}
 }
