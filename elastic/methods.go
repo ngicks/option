@@ -7,14 +7,18 @@ import (
 	"github.com/ngicks/option/und"
 )
 
-// Coalesce squashes 3-state e into 2-state e,
-// (defined | null) if toNull is true, (defined | undefined) otherwise.
-func (e Elastic[T]) Coalesce(toNull bool) Elastic[T] {
+// CollapseToNull returns e as is if e is defined, Null otherwise.
+func (e Elastic[T]) CollapseToNull() Elastic[T] {
 	if e.IsDefined() {
 		return e
 	}
-	if toNull {
-		return Null[T]()
+	return Null[T]()
+}
+
+// CollapseToUndefined returns e as is if e is defined, Undefined otherwise.
+func (e Elastic[T]) CollapseToUndefined() Elastic[T] {
+	if e.IsDefined() {
+		return e
 	}
 	return Undefined[T]()
 }

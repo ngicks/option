@@ -188,15 +188,24 @@ func TestElastic_CloneFunc(t *testing.T) {
 	}
 }
 
-func TestElastic_Coalesce(t *testing.T) {
-	if e := elastic.Undefined[int]().Coalesce(true); !e.IsNull() {
-		t.Error("Undefined.Coalesce(true) is not null")
+func TestElastic_Collapse(t *testing.T) {
+	if e := elastic.Undefined[int]().CollapseToNull(); !e.IsNull() {
+		t.Error("Undefined.CollapseToNull() is not null")
 	}
-	if e := elastic.Null[int]().Coalesce(false); !e.IsUndefined() {
-		t.Error("Null.Coalesce(false) is not undefined")
+	if e := elastic.Null[int]().CollapseToNull(); !e.IsNull() {
+		t.Error("Null.CollapseToNull() is not null")
 	}
-	if e := elastic.FromValue(5).Coalesce(true); !e.IsDefined() || e.Value() != 5 {
-		t.Errorf("FromValue(5).Coalesce(true) = %v, want defined(5)", e)
+	if e := elastic.FromValue(5).CollapseToNull(); !e.IsDefined() || e.Value() != 5 {
+		t.Errorf("FromValue(5).CollapseToNull() = %v, want defined(5)", e)
+	}
+	if e := elastic.Null[int]().CollapseToUndefined(); !e.IsUndefined() {
+		t.Error("Null.CollapseToUndefined() is not undefined")
+	}
+	if e := elastic.Undefined[int]().CollapseToUndefined(); !e.IsUndefined() {
+		t.Error("Undefined.CollapseToUndefined() is not undefined")
+	}
+	if e := elastic.FromValue(5).CollapseToUndefined(); !e.IsDefined() || e.Value() != 5 {
+		t.Errorf("FromValue(5).CollapseToUndefined() = %v, want defined(5)", e)
 	}
 }
 

@@ -86,6 +86,27 @@ func TestUnd_Strip(t *testing.T) {
 	}
 }
 
+func TestUnd_Collapse(t *testing.T) {
+	if u := und.Undefined[int]().CollapseToNull(); !u.IsNull() {
+		t.Error("Undefined.CollapseToNull() is not null")
+	}
+	if u := und.Null[int]().CollapseToNull(); !u.IsNull() {
+		t.Error("Null.CollapseToNull() is not null")
+	}
+	if u := und.Defined(5).CollapseToNull(); !u.IsDefined() || u.Value() != 5 {
+		t.Errorf("Defined(5).CollapseToNull() = %v, want defined(5)", u)
+	}
+	if u := und.Null[int]().CollapseToUndefined(); !u.IsUndefined() {
+		t.Error("Null.CollapseToUndefined() is not undefined")
+	}
+	if u := und.Undefined[int]().CollapseToUndefined(); !u.IsUndefined() {
+		t.Error("Undefined.CollapseToUndefined() is not undefined")
+	}
+	if u := und.Defined(5).CollapseToUndefined(); !u.IsDefined() || u.Value() != 5 {
+		t.Errorf("Defined(5).CollapseToUndefined() = %v, want defined(5)", u)
+	}
+}
+
 func TestUnd_Equal(t *testing.T) {
 	cases := []struct {
 		name string

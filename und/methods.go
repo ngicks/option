@@ -2,14 +2,18 @@ package und
 
 import "github.com/ngicks/option/opt"
 
-// Coalesce squashes 3-state u into 2-state u,
-// (defined | null) if toNull is true, (defined | undefined) otherwise.
-func (u Und[T]) Coalesce(toNull bool) Und[T] {
+// CollapseToNull returns u as is if u is defined, Null otherwise.
+func (u Und[T]) CollapseToNull() Und[T] {
 	if u.IsDefined() {
 		return u
 	}
-	if toNull {
-		return Null[T]()
+	return Null[T]()
+}
+
+// CollapseToUndefined returns u as is if u is defined, Undefined otherwise.
+func (u Und[T]) CollapseToUndefined() Und[T] {
+	if u.IsDefined() {
+		return u
 	}
 	return Undefined[T]()
 }
