@@ -34,6 +34,26 @@ func WrapPointer[T any](t *T) Und[*T] {
 	return Defined(t)
 }
 
+// WrapSlice converts s into Und[S].
+// The und value is defined if s is non nil, undefined otherwise.
+// An empty non-nil s is defined.
+func WrapSlice[S ~[]E, E any](s S) Und[S] {
+	if s == nil {
+		return Undefined[S]()
+	}
+	return Defined(s)
+}
+
+// WrapMap converts m into Und[M].
+// The und value is defined if m is non nil, undefined otherwise.
+// An empty non-nil m is defined.
+func WrapMap[M ~map[K]V, K comparable, V any](m M) Und[M] {
+	if m == nil {
+		return Undefined[M]()
+	}
+	return Defined(m)
+}
+
 // Wrap wraps given o with Und wrapper.
 func Wrap[T any](o opt.Option[opt.Option[T]]) Und[T] {
 	return Und[T]{opt: o}

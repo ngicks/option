@@ -60,6 +60,38 @@ func TestUnd_FromPointer(t *testing.T) {
 	}
 }
 
+func TestUnd_WrapSlice(t *testing.T) {
+	type named []int
+	if u := und.WrapSlice(named{1}); !u.IsDefined() || !slices.Equal(u.Value(), named{1}) {
+		t.Errorf("WrapSlice(named{1}) = %v", u)
+	}
+	if u := und.WrapSlice([]int{}); !u.IsDefined() || u.Value() == nil {
+		t.Errorf("WrapSlice([]int{}) = %v, want defined empty slice", u)
+	}
+	if u := und.WrapSlice([]int(nil)); !u.IsUndefined() {
+		t.Error("WrapSlice(nil) is not undefined")
+	}
+	if u := und.WrapSlice([]int(nil)).CollapseToNull(); !u.IsNull() {
+		t.Error("WrapSlice(nil).CollapseToNull() is not null")
+	}
+}
+
+func TestUnd_WrapMap(t *testing.T) {
+	type named map[string]int
+	if u := und.WrapMap(named{"a": 1}); !u.IsDefined() || u.Value()["a"] != 1 {
+		t.Errorf("WrapMap(named{a:1}) = %v", u)
+	}
+	if u := und.WrapMap(map[string]int{}); !u.IsDefined() || u.Value() == nil {
+		t.Errorf("WrapMap(map{}) = %v, want defined empty map", u)
+	}
+	if u := und.WrapMap(map[string]int(nil)); !u.IsUndefined() {
+		t.Error("WrapMap(nil) is not undefined")
+	}
+	if u := und.WrapMap(map[string]int(nil)).CollapseToNull(); !u.IsNull() {
+		t.Error("WrapMap(nil).CollapseToNull() is not null")
+	}
+}
+
 func TestUnd_Pointer(t *testing.T) {
 	// Pointer returns a pointer to the inner opt.Option[T]; nil only when undefined.
 	if und.Undefined[int]().Pointer() != nil {
